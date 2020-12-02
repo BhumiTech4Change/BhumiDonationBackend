@@ -6,9 +6,12 @@ const findOneById = (dbo, coll, id) =>
     .findOne({ _id: new ObjectID(id) }, { projection: { password: 0 } })
 
 const findOneByEmail = (dbo, coll, email) =>
-  dbo.collection(coll).findOne({ email }, { projection: { password: 0 } })
+  dbo.collection(coll).findOne({ email })
+
+const insertOne = (dbo, coll, data) => dbo.collection(coll).insertOne(data)
 
 module.exports = {
   findOneById,
   findOneByEmail,
+  insertOne,
 }

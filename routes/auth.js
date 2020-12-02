@@ -1,13 +1,15 @@
 const router = require('express').Router()
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const { loginValidation } = require('../middleware/validation')
 const { findOneById, findOneByEmail } = require('../handler/mongoHandler')
+const auth = require('../middleware/auth')
 
 // get /api/auth
 // get logged in user
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   let { dbo } = req.app.locals
 
   try {
@@ -37,6 +39,9 @@ router.post('/', loginValidation, async (req, res) => {
 
     if (!user)
       return res.status(401).json({ msg: 'this email is not registered' })
+
+    if (!user.isVerified)
+      return res.status(402).json({ msg: 'email not verified' })
 
     let isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) return res.status(401).json({ msg: 'incorrect password' })
