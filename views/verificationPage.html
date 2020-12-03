@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <title>Donation App</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+      body {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+      }
+      .content {
+        padding: 10vh 2.5vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 500px;
+        text-align: center;
+      }
+      .content p {
+        font-size: 1.5rem;
+        font-family: 'Roboto', sans-serif;
+      }
+      .success {
+        width: 150px;
+        height: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content">
+        <lottie-player
+          src="https://assets8.lottiefiles.com/temp/lf20_MqU2rh.json"
+          background="transparent"
+          speed="1"
+          class="success"
+          autoplay
+        ></lottie-player>
+        <p>
+          Your email has been verified, you may now proceed to our app to login.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

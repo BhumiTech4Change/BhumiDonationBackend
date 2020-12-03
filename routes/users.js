@@ -1,9 +1,15 @@
 const router = require('express').Router()
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
+const path = require('path')
 
 const { registerValidation } = require('../middleware/validation')
-const { findOneByEmail, insertOne } = require('../handler/mongoHandler')
+const {
+  findOneByEmail,
+  insertOne,
+  findOneById,
+  verifyUser,
+} = require('../handler/mongoHandler')
 const { sendVerificationMail } = require('../handler/mailerHandler')
 
 //post /api/users
@@ -54,6 +60,21 @@ router.post('/', registerValidation, async (req, res) => {
 })
 
 // get /api/users/verify/:userid
-router.get('/verify/:userid', (req, res) => {})
+// verify user
+router.get('/verify/:userid', async (req, res) => {
+  let { dbo } = req.app.locals
+  let { userid } = req.params
+  try {
+    let user = await findOneById(dbo, 'users', userid)
+
+    if (!user) return res.sendFile(path.resolve(__dirname, '../views/404.html'))
+
+    await verifyUser(dbo, userid)
+    res.sendFile(path.resolve(__dirname, '../views/verificationPage.html'))
+  } catch (err) {
+    console.error(err.message)
+    res.sendFile(path.resolve(__dirname, '../views/404.html'))
+  }
+})
 
 module.exports = router
