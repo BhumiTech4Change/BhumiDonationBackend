@@ -4,10 +4,11 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const { loginValidation } = require('../middleware/validation')
-const { findOneById, findOneByEmail } = require('../handler/mongoHandler')
+const { findOneById, findOne } = require('../handler/mongoHandler')
 const auth = require('../middleware/auth')
 
-// get /api/auth
+// !private
+// GET /api/auth
 // get logged in user
 router.get('/', auth, async (req, res) => {
   let { dbo } = req.app.locals
@@ -23,7 +24,8 @@ router.get('/', auth, async (req, res) => {
   }
 })
 
-// post /api/auth
+// *public
+// POST /api/auth
 // authenticate user and give token(login)
 router.post('/', loginValidation, async (req, res) => {
   const errors = validationResult(req)
@@ -35,7 +37,7 @@ router.post('/', loginValidation, async (req, res) => {
   let { dbo } = req.app.locals
   let { email, password } = req.body
   try {
-    let user = await findOneByEmail(dbo, 'users', email)
+    let user = await findOne(dbo, 'users', { email })
 
     if (!user)
       return res.status(401).json({ msg: 'this email is not registered' })
@@ -49,6 +51,7 @@ router.post('/', loginValidation, async (req, res) => {
     let payload = {
       user: {
         id: user._id,
+        name: user.name,
       },
     }
 

@@ -48,7 +48,27 @@ const registerValidation = [
     .withMessage('Invalid password'),
 ]
 
+const fundraiserValidation = [
+  body('title')
+    .exists({ checkFalsy: true, checkNull: true })
+    .withMessage('Please enter a title')
+    .bail(),
+  body('description')
+    .exists({ checkFalsy: true, checkNull: true })
+    .withMessage('Please enter a description')
+    .bail(),
+  body('isAmountFixed')
+    .exists({ checkNull: true })
+    .withMessage('Please provide a value for isAmountFixed')
+    .bail(),
+  body('category')
+    .exists({ checkFalsy: true, checkNull: true })
+    .withMessage('Please choose a category')
+    .bail(),
+]
+
 module.exports = {
   loginValidation,
   registerValidation,
+  fundraiserValidation,
 }

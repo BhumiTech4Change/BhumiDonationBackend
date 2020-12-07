@@ -5,14 +5,15 @@ const path = require('path')
 
 const { registerValidation } = require('../middleware/validation')
 const {
-  findOneByEmail,
+  findOne,
   insertOne,
   findOneById,
   verifyUser,
 } = require('../handler/mongoHandler')
 const { sendVerificationMail } = require('../handler/mailerHandler')
 
-//post /api/users
+// *public
+// POST /api/users
 // register a user
 router.post('/', registerValidation, async (req, res) => {
   const errors = validationResult(req)
@@ -25,7 +26,7 @@ router.post('/', registerValidation, async (req, res) => {
   let { dbo, transporter } = req.app.locals
   let { name, email, city, phno, password } = req.body
   try {
-    let user = await findOneByEmail(dbo, 'users', email)
+    let user = await findOne(dbo, 'users', { email })
 
     if (user)
       return res
@@ -40,7 +41,7 @@ router.post('/', registerValidation, async (req, res) => {
       city,
       password: hash,
       isVerified: 0,
-      time: new Date().toString().substring(4, 24),
+      createdAt: new Date().toString().substring(4, 24),
     })
 
     let testLink = `${req.protocol}://${req.hostname}:5000/api/users/verify/${result.insertedId}`
@@ -59,7 +60,8 @@ router.post('/', registerValidation, async (req, res) => {
   }
 })
 
-// get /api/users/verify/:userid
+// *public
+// GET /api/users/verify/:userid
 // verify user
 router.get('/verify/:userid', async (req, res) => {
   let { dbo } = req.app.locals

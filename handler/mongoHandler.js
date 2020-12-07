@@ -1,12 +1,16 @@
 const { ObjectID } = require('mongodb')
 
+const findAll = (dbo, coll) => dbo.collection(coll).find({}).toArray()
+
 const findOneById = (dbo, coll, id) =>
   dbo
     .collection(coll)
     .findOne({ _id: new ObjectID(id) }, { projection: { password: 0 } })
 
-const findOneByEmail = (dbo, coll, email) =>
-  dbo.collection(coll).findOne({ email })
+const findOne = (dbo, coll, filter) => dbo.collection(coll).findOne(filter)
+
+const findMany = (dbo, coll, filter) =>
+  dbo.collection(coll).find(filter).toArray()
 
 const insertOne = (dbo, coll, data) => dbo.collection(coll).insertOne(data)
 
@@ -17,7 +21,9 @@ const verifyUser = (dbo, id) =>
 
 module.exports = {
   findOneById,
-  findOneByEmail,
+  findOne,
   insertOne,
   verifyUser,
+  findAll,
+  findMany,
 }
