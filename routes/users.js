@@ -11,6 +11,7 @@ const {
   verifyUser,
 } = require('../handler/mongoHandler')
 const { sendVerificationMail } = require('../handler/mailerHandler')
+const prod = process.env.NODE_ENV === 'production'
 
 // *public
 // POST /api/users
@@ -44,13 +45,14 @@ router.post('/', registerValidation, async (req, res) => {
       createdAt: new Date().toString().substring(4, 24),
     })
 
-    let testLink = `${req.protocol}://${req.hostname}:5000/api/users/verify/${result.insertedId}`
-    // let link = `${req.protocol}://${req.hostname}/api/users/verify/${result.insertedId}`
+    let devLink = `${req.protocol}://${req.hostname}:5000/api/users/verify/${result.insertedId}`
+    let prodLink = `${req.protocol}://${req.hostname}/api/users/verify/${result.insertedId}`
+    let link = prod ? prodLink : devLink
     const mailResult = await sendVerificationMail(
       transporter,
       process.env.EMAIL,
       email,
-      testLink
+      link
     )
     console.log(mailResult.envelope)
     res.json({ msg: 'verification email sent' })
