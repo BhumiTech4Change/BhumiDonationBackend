@@ -71,7 +71,7 @@ const createOrder = async (dispatch, amount) => {
 
 export const verifyPayment = async (dispatch, data) => {
   try {
-    let res = axios.post('/api/razorpay/verify', data, config)
+    await axios.post('/api/razorpay/verify', data, config)
 
     dispatch({
       type: PAYMENT_SUCCESS,
