@@ -22,6 +22,8 @@ const verifyUser = (dbo, id) =>
 const updateOne = (dbo, coll, filter, operation) =>
   dbo.collection(coll).updateOne(filter, operation)
 
+const deleteOne = (dbo, coll, filter) => dbo.collection(coll).deleteOne(filter)
+
 module.exports = {
   findOneById,
   findOne,
@@ -30,4 +32,5 @@ module.exports = {
   findAll,
   findMany,
   updateOne,
+  deleteOne,
 }

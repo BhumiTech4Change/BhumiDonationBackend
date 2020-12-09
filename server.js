@@ -16,6 +16,7 @@ app.use('/api/users', require('./routes/users'))
 app.use('/api/fundraisers', require('./routes/fundraisers'))
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/razorpay', require('./routes/razorpay'))
+app.use('/api/admin', require('./routes/admin'))
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
