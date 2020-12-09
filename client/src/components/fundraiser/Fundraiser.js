@@ -4,6 +4,7 @@ import NotFound from '../layout/NotFound'
 import Razorpay from '../payment/Razorpay'
 import DetailsForm from './DetailsForm'
 import { usePayments, getFundraiser } from '../../context/payment/PaymentState'
+import Thankyou from './Thankyou'
 
 const Fundraiser = ({
   match: {
@@ -11,7 +12,15 @@ const Fundraiser = ({
   },
 }) => {
   const [paymentState, paymentDispatch] = usePayments()
-  const { fundraiser, loading, error, amount, donor, order } = paymentState
+  const {
+    fundraiser,
+    loading,
+    error,
+    amount,
+    donor,
+    order,
+    isPaymentDone,
+  } = paymentState
 
   useEffect(() => {
     getFundraiser(paymentDispatch, shortUrl)
@@ -27,10 +36,14 @@ const Fundraiser = ({
         <>
           <p>{fundraiser.title}</p>
           <p>{fundraiser.description}</p>
-          {donor && amount && order ? (
-            <Razorpay fundraiser={fundraiser} />
+          {!isPaymentDone ? (
+            donor && amount && order ? (
+              <Razorpay fundraiser={fundraiser} />
+            ) : (
+              <DetailsForm fundraiser={fundraiser} />
+            )
           ) : (
-            <DetailsForm fundraiser={fundraiser} />
+            <Thankyou />
           )}
         </>
       )}

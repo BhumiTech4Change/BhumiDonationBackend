@@ -1,5 +1,5 @@
 import React from 'react'
-import { usePayments } from '../../context/payment/PaymentState'
+import { usePayments, verifyPayment } from '../../context/payment/PaymentState'
 
 const loadScript = (src) =>
   new Promise((resolve) => {
@@ -14,15 +14,30 @@ const loadScript = (src) =>
     }
   })
 
-const Razorpay = ({ fundraiser }) => {
-  const [paymentState] = usePayments()
+const Razorpay = () => {
+  const [paymentState, paymentDispatch] = usePayments()
   const {
     order,
     donor: { name, email, contact },
+    fundraiser,
   } = paymentState
   const prod = document.domain !== 'localhost'
 
-  const onPaymentSuccess = (response) => console.log('success', response)
+  const onPaymentSuccess = (response) => {
+    let donor = {
+      name,
+      email,
+      contact,
+      amount: order.amount / 100,
+    }
+    let data = {
+      order_id: order.id,
+      ...response,
+      donor,
+      shortUrl: fundraiser.shortUrl,
+    }
+    verifyPayment(paymentDispatch, data)
+  }
   const onPaymentFailure = (response) => console.log('fail', response)
 
   const displayRazorpay = async () => {

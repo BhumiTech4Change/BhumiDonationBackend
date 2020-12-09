@@ -5,6 +5,7 @@ import paymentReducer from './paymentReducer'
 import {
   GET_FUNDRAISER,
   NOT_FOUND_ERROR,
+  PAYMENT_SUCCESS,
   RAZORPAY_ERROR,
   SET_AMOUNT,
   SET_DONOR,
@@ -68,6 +69,21 @@ const createOrder = async (dispatch, amount) => {
   }
 }
 
+export const verifyPayment = async (dispatch, data) => {
+  try {
+    let res = axios.post('/api/razorpay/verify', data, config)
+
+    dispatch({
+      type: PAYMENT_SUCCESS,
+    })
+  } catch (err) {
+    dispatch({
+      type: RAZORPAY_ERROR,
+      payload: err.response.data.msg,
+    })
+  }
+}
+
 const PaymentState = (props) => {
   const initialState = {
     fundraiser: null,
@@ -77,6 +93,7 @@ const PaymentState = (props) => {
     amount: null,
     order: null,
     razorpayError: null,
+    isPaymentDone: false,
   }
 
   const [state, dispatch] = useReducer(paymentReducer, initialState)

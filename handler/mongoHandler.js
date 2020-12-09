@@ -19,6 +19,9 @@ const verifyUser = (dbo, id) =>
     .collection('users')
     .updateOne({ _id: new ObjectID(id) }, { $set: { isVerified: 1 } })
 
+const updateOne = (dbo, coll, filter, operation) =>
+  dbo.collection(coll).updateOne(filter, operation)
+
 module.exports = {
   findOneById,
   findOne,
@@ -26,4 +29,5 @@ module.exports = {
   verifyUser,
   findAll,
   findMany,
+  updateOne,
 }
