@@ -62,7 +62,8 @@ router.post('/', auth, fundraiserValidation, async (req, res) => {
       createdAt: new Date().toString().substring(4, 24),
     }
     await insertOne(dbo, 'fundraisers', data)
-    res.json({ msg: 'fundraiser created successfully', link: shortUrl })
+    let link = `${req.protocol}://${req.hostname}/fundraisers/${shortUrl}`
+    res.json({ msg: 'fundraiser created successfully', link })
   } catch (err) {
     console.error(err.message)
     res.status(500).json({ msg: 'Server Error!' })
