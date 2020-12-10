@@ -45,8 +45,8 @@ router.post('/', registerValidation, async (req, res) => {
       createdAt: new Date().toString().substring(4, 24),
     })
 
-    let devLink = `${req.protocol}://${req.hostname}:5000/api/users/verify/${result.insertedId}`
-    let prodLink = `${req.protocol}://${req.hostname}/api/users/verify/${result.insertedId}`
+    let devLink = `${req.protocol}://${req.hostname}:5000/verify/${result.insertedId}`
+    let prodLink = `${req.protocol}://${req.hostname}/verify/${result.insertedId}`
     let link = prod ? prodLink : devLink
     const mailResult = await sendVerificationMail(
       transporter,
