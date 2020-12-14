@@ -39,21 +39,13 @@ router.post('/', auth, fundraiserValidation, async (req, res) => {
       .json({ msg: 'validation error', errors: errors.array() })
 
   let { dbo } = req.app.locals
-  let {
-    title,
-    description,
-    category,
-    isAmountFixed,
-    amountPerDonor = 0,
-  } = req.body
+  let { ngo, description, subCategory } = req.body
   let shortUrl = nanoid(6)
   try {
     let data = {
-      title,
+      ngo,
       description,
-      category,
-      isAmountFixed,
-      amountPerDonor,
+      subCategory,
       shortUrl,
       creatorId: req.user.id,
       creatorName: req.user.name,
