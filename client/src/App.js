@@ -2,12 +2,13 @@ import './App.css'
 import Fundraiser from './components/fundraiser/Fundraiser'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import PaymentState from './context/payment/PaymentState'
+import Navbar from './components/layout/Navbar'
 
 const App = () => {
   return (
     <PaymentState>
       <Router>
-        <h1>Let's say this is a navbar</h1>
+        <Navbar />
         <Switch>
           <Route exact path='/fundraiser/:shortUrl' component={Fundraiser} />
         </Switch>

@@ -1,11 +1,21 @@
 import React from 'react'
+import Typography from '@material-ui/core/Typography'
+import Grid from '@material-ui/core/Grid'
 
 const NotFound = () => {
   return (
-    <div>
-      <h1>Not Found</h1>
-      <p>The page you are looking for does not exist</p>
-    </div>
+    <Grid
+      container
+      justify='center'
+      align='center'
+      direction='column'
+      style={{ padding: '10%' }}
+    >
+      <Typography variant='h4'>Not Found</Typography>
+      <Typography variant='h6'>
+        The page you're looking for does not exist.
+      </Typography>
+    </Grid>
   )
 }
 
