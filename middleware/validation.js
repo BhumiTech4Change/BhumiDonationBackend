@@ -51,7 +51,11 @@ const registerValidation = [
 const fundraiserValidation = [
   body('ngo')
     .exists({ checkFalsy: true, checkNull: true })
-    .withMessage('Please enter a title')
+    .withMessage('Please enter a ngo name')
+    .bail(),
+  body('ngoId')
+    .exists({ checkFalsy: true, checkNull: true })
+    .withMessage('Please provide an ngo ID')
     .bail(),
   body('description')
     .exists({ checkFalsy: true, checkNull: true })
@@ -59,6 +63,10 @@ const fundraiserValidation = [
     .bail(),
   body('subCategory')
     .exists({ checkNull: true })
+    .withMessage('Please choose a category')
+    .bail(),
+  body('type')
+    .exists({ checkFalsy: true, checkNull: true })
     .withMessage('Please choose a category')
     .bail(),
 ]

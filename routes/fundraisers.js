@@ -39,13 +39,14 @@ router.post('/', auth, fundraiserValidation, async (req, res) => {
       .json({ msg: 'validation error', errors: errors.array() })
 
   let { dbo } = req.app.locals
-  let { ngo, description, subCategory } = req.body
+  let { ngo, ngoId, description, subCategory, type } = req.body
   let shortUrl = nanoid(6)
   try {
     let data = {
       ngo,
       description,
       subCategory,
+      type,
       shortUrl,
       creatorId: req.user.id,
       creatorName: req.user.name,
@@ -54,7 +55,7 @@ router.post('/', auth, fundraiserValidation, async (req, res) => {
       createdAt: new Date().toString().substring(4, 24),
     }
     await insertOne(dbo, 'fundraisers', data)
-    let link = `${req.protocol}://${req.hostname}/fundraisers/${shortUrl}`
+    let link = `${req.protocol}://${req.hostname}/fundraiser/${shortUrl}`
     res.json({ msg: 'fundraiser created successfully', link })
   } catch (err) {
     console.error(err.message)
@@ -79,20 +80,6 @@ router.get('/:shortUrl', async (req, res) => {
   } catch (err) {
     console.error(err.message)
     res.status(500).json({ msg: 'Server Error' })
-  }
-})
-
-// !private
-// GET /api/fundraisers/categories
-// get list of categories
-router.get('/categories', auth, async (req, res) => {
-  let { dbo } = req.app.locals
-  try {
-    let categories = await findAll(dbo, 'categories')
-    res.json({ categories })
-  } catch (err) {
-    console.error(err.message)
-    res.status(500).json({ msg: 'Server Error!' })
   }
 })
 
