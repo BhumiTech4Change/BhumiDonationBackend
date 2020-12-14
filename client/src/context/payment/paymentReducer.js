@@ -5,6 +5,7 @@ import {
   RAZORPAY_ERROR,
   SET_AMOUNT,
   SET_DONOR,
+  SET_LOADING,
   SET_ORDER,
 } from '../types'
 
@@ -14,7 +15,6 @@ const paymentReducer = (state, action) => {
       return {
         ...state,
         fundraiser: action.payload,
-        loading: false,
       }
     case SET_DONOR:
       return {
@@ -45,6 +45,11 @@ const paymentReducer = (state, action) => {
       return {
         ...state,
         error: 404,
+      }
+    case SET_LOADING:
+      return {
+        ...state,
+        loading: action.payload,
       }
     default:
       return state

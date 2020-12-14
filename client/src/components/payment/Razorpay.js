@@ -1,5 +1,6 @@
 import React from 'react'
 import { usePayments, verifyPayment } from '../../context/payment/PaymentState'
+import Button from '@material-ui/core/Button'
 
 const loadScript = (src) =>
   new Promise((resolve) => {
@@ -65,7 +66,16 @@ const Razorpay = () => {
     paymentObject.open()
   }
 
-  return <button onClick={displayRazorpay}>Donate</button>
+  return (
+    <Button
+      variant='contained'
+      color='primary'
+      size='large'
+      onClick={displayRazorpay}
+    >
+      Donate
+    </Button>
+  )
 }
 
 export default Razorpay

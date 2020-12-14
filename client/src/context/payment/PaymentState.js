@@ -9,6 +9,7 @@ import {
   RAZORPAY_ERROR,
   SET_AMOUNT,
   SET_DONOR,
+  SET_LOADING,
   SET_ORDER,
 } from '../types'
 
@@ -26,12 +27,14 @@ export const usePayments = () => {
 
 export const getFundraiser = async (dispatch, shortUrl) => {
   try {
+    setLoading(dispatch, true)
     const res = await axios.get(`/api/fundraisers/${shortUrl}`)
 
     dispatch({
       type: GET_FUNDRAISER,
       payload: res.data.fundraiser,
     })
+    setLoading(dispatch, false)
   } catch (err) {
     dispatch({
       type: NOT_FOUND_ERROR,
@@ -82,6 +85,13 @@ export const verifyPayment = async (dispatch, data) => {
       payload: err.response.data.msg,
     })
   }
+}
+
+const setLoading = (dispatch, loading) => {
+  dispatch({
+    type: SET_LOADING,
+    payload: loading,
+  })
 }
 
 const PaymentState = (props) => {

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import Spinner from '../layout/Spinner'
 import NotFound from '../layout/NotFound'
-import Razorpay from '../payment/Razorpay'
-import DetailsForm from './DetailsForm'
 import { usePayments, getFundraiser } from '../../context/payment/PaymentState'
-import Thankyou from './Thankyou'
+import FundraiserDetails from './FundraiserDetails'
+import FundraiserActions from './FundraiserActions'
+import Grid from '@material-ui/core/Grid'
 
 const Fundraiser = ({
   match: {
@@ -12,15 +12,7 @@ const Fundraiser = ({
   },
 }) => {
   const [paymentState, paymentDispatch] = usePayments()
-  const {
-    fundraiser,
-    loading,
-    error,
-    amount,
-    donor,
-    order,
-    isPaymentDone,
-  } = paymentState
+  const { fundraiser, loading, error } = paymentState
 
   useEffect(() => {
     getFundraiser(paymentDispatch, shortUrl)
@@ -33,19 +25,19 @@ const Fundraiser = ({
       ) : loading ? (
         <Spinner />
       ) : (
-        <>
-          <p>{fundraiser.title}</p>
-          <p>{fundraiser.description}</p>
-          {!isPaymentDone ? (
-            donor && amount && order ? (
-              <Razorpay fundraiser={fundraiser} />
-            ) : (
-              <DetailsForm fundraiser={fundraiser} />
-            )
-          ) : (
-            <Thankyou />
-          )}
-        </>
+        <Grid
+          style={{ minHeight: '100vh', padding: '5%' }}
+          container
+          direction='row'
+          spacing={1}
+        >
+          <Grid item align='center' xs={12} sm={8}>
+            <FundraiserDetails fundraiser={fundraiser} />
+          </Grid>
+          <Grid item align='center' xs={12} sm={4}>
+            <FundraiserActions />
+          </Grid>
+        </Grid>
       )}
     </>
   )
