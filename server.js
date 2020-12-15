@@ -3,6 +3,7 @@ const app = express()
 const { MongoClient } = require('mongodb')
 const nodemailer = require('nodemailer')
 const cors = require('cors')
+const path = require('path')
 require('dotenv').config()
 
 //To parse req.body
