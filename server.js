@@ -4,6 +4,7 @@ const { MongoClient } = require('mongodb')
 const nodemailer = require('nodemailer')
 const cors = require('cors')
 const path = require('path')
+const aws = require('aws-sdk')
 require('dotenv').config()
 
 //To parse req.body
@@ -13,6 +14,7 @@ app.use(express.json())
 //To enable cors
 app.use(cors())
 
+//routers
 app.use('/api/users', require('./routes/users'))
 app.use('/api/fundraisers', require('./routes/fundraisers'))
 app.use('/api/ngos', require('./routes/ngos'))
@@ -35,19 +37,14 @@ const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)
 
+  aws.config.update({
+    accessKeyId: process.env.AWS_MAIL_KEY,
+    secretAccessKey: process.env.AWS_MAIL_SECRET,
+    region: 'us-east-1',
+    maxRetries: 1,
+  })
   let transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      type: 'OAuth2',
-      user: process.env.EMAIL,
-      clientId: process.env.MAIL_CLIENT_ID,
-      clientSecret: process.env.MAIL_CLIENT_SECRET,
-      refreshToken: process.env.MAIL_REFRESH_TOKEN,
-      accessToken: process.env.MAIL_ACCESS_TOKEN,
-      expires: 1484314697598,
-    },
+    SES: new aws.SES(),
   })
 
   app.locals.transporter = transporter
