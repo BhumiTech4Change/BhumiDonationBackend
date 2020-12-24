@@ -40,22 +40,25 @@ router.post('/', loginValidation, async (req, res) => {
     let user = await findOne(dbo, 'users', { email })
 
     if (!user)
-      return res.status(401).json({ msg: 'this email is not registered' })
+      return res.status(401).json({ msg: 'This email is not registered' })
 
     if (!user.isVerified)
-      return res.status(402).json({ msg: 'email not verified' })
+      return res.status(402).json({ msg: 'Email not verified' })
 
     let isMatch = await bcrypt.compare(password, user.password)
-    if (!isMatch) return res.status(401).json({ msg: 'incorrect password' })
+    if (!isMatch) return res.status(401).json({ msg: 'Incorrect password' })
 
     let payload = {
       user: {
         id: user._id,
         name: user.name,
+        role: user.role,
       },
     }
 
     let token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 })
+
+    if (user.role === 'admin') return res.status(201).json({ token })
     res.json({ token })
   } catch (err) {
     console.error(err.message)

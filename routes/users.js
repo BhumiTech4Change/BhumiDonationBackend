@@ -42,6 +42,7 @@ router.post('/', registerValidation, async (req, res) => {
       city,
       password: hash,
       isVerified: 0,
+      role: 'user',
       createdAt: new Date().toString().substring(4, 24),
     })
 

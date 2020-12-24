@@ -44,6 +44,7 @@ router.post('/', auth, fundraiserValidation, async (req, res) => {
   try {
     let data = {
       ngo,
+      ngoId,
       description,
       subCategory,
       type,
