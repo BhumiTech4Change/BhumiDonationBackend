@@ -29,15 +29,22 @@ router.get('/fundraisers/:ngoId', auth, adminCheck, async (req, res) => {
 })
 
 // !private
-// GET /api/admin/categories
-// get all categories
-router.get('/categories', auth, async (req, res) => {
+// POST /api/admin/ngos
+// add new ngo
+router.post('/ngos', auth, adminCheck, async (req, res) => {
   const { dbo } = req.app.locals
+  const { name, description, url } = req.body
 
   try {
-    let categories = await findAll(dbo, 'categories')
-
-    res.json({ categories })
+    let data = {
+      name,
+      description,
+      url,
+      subCategories: [],
+      createdAt: new Date().toString().substring(4, 24),
+    }
+    await insertOne(dbo, 'ngos', data)
+    res.json({ msg: 'NGO added' })
   } catch (err) {
     console.error(err.message)
     res.status(500).json({ msg: 'Server errror' })
@@ -45,19 +52,40 @@ router.get('/categories', auth, async (req, res) => {
 })
 
 // !private
-// POST /api/admin/categories
-// add new category
-router.post('/categories', auth, async (req, res) => {
+// DELETE /api/admin/ngos/:id
+// delete a ngo
+router.delete('/ngos/:id', auth, adminCheck, async (req, res) => {
   const { dbo } = req.app.locals
-  const { name } = req.body
-  if (!name)
-    return res.status(400).json({ msg: 'Please enter a category name' })
+
+  try {
+    let filter = { _id: new ObjectID(req.params.id) }
+    await deleteOne(dbo, 'ngos', filter)
+
+    res.json({ msg: 'NGO deleted' })
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).json({ msg: 'Server errror' })
+  }
+})
+
+// !private
+// POST /api/admin/ngos/:ngoId/categories
+// add new category
+router.post('/ngos/:ngoId/categories', auth, adminCheck, async (req, res) => {
+  const { dbo } = req.app.locals
+  const { name, description, url } = req.body
+
   try {
     let data = {
       name,
+      description,
+      url,
       createdAt: new Date().toString().substring(4, 24),
     }
-    await insertOne(dbo, 'categories', data)
+    let filter = { _id: new ObjectID(req.params.ngoId) }
+    let operation = { $push: { subCategories: data } }
+
+    await updateOne(dbo, 'ngos', filter, operation)
     res.json({ msg: 'Category added' })
   } catch (err) {
     console.error(err.message)
@@ -66,41 +94,27 @@ router.post('/categories', auth, async (req, res) => {
 })
 
 // !private
-// PUT /api/admin/categories/:id
-// update a category
-router.put('/categories/:id', auth, async (req, res) => {
-  const { dbo } = req.app.locals
-  const { name } = req.body
-  if (!name)
-    return res.status(400).json({ msg: 'Please enter a category name' })
+// DELETE /api/admin/ngos/:ngoId/categories/
+// add new category
+router.delete(
+  '/ngos/:ngoId/categories/',
+  auth,
+  adminCheck,
+  async (req, res) => {
+    const { dbo } = req.app.locals
+    const { name } = req.body
 
-  try {
-    let filter = { _id: new ObjectID(req.params.id) }
-    let operation = { $set: { name } }
-    await updateOne(dbo, 'categories', filter, operation)
+    try {
+      let filter = { _id: new ObjectID(req.params.ngoId) }
+      let operation = { $pull: { subCategories: { name } } }
 
-    res.json({ msg: 'Category updated' })
-  } catch (err) {
-    console.error(err.message)
-    res.status(500).json({ msg: 'Server errror' })
+      await updateOne(dbo, 'ngos', filter, operation)
+      res.json({ msg: 'Category removed' })
+    } catch (err) {
+      console.error(err.message)
+      res.status(500).json({ msg: 'Server errror' })
+    }
   }
-})
-
-// !private
-// DELETE /api/admin/categories/:id
-// update a category
-router.delete('/categories/:id', auth, async (req, res) => {
-  const { dbo } = req.app.locals
-
-  try {
-    let filter = { _id: new ObjectID(req.params.id) }
-    await deleteOne(dbo, 'categories', filter)
-
-    res.json({ msg: 'Category deleted' })
-  } catch (err) {
-    console.error(err.message)
-    res.status(500).json({ msg: 'Server errror' })
-  }
-})
+)
 
 module.exports = router
