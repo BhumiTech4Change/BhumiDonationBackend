@@ -6,17 +6,20 @@ const {
   insertOne,
   updateOne,
   deleteOne,
+  findMany,
 } = require('../handler/mongoHandler')
 const auth = require('../middleware/auth')
+const adminCheck = require('../middleware/adminCheck')
 
 // !private
-// GET /api/admin/fundraisers
-// get all fundraisers
-router.get('/fundraisers', auth, async (req, res) => {
+// GET /api/admin/fundraisers/:ngoId
+// get all fundraisers for a ngo
+router.get('/fundraisers/:ngoId', auth, adminCheck, async (req, res) => {
   const { dbo } = req.app.locals
 
   try {
-    let fundraisers = await findAll(dbo, 'fundraisers')
+    let filter = { ngoId: req.params.ngoId }
+    let fundraisers = await findMany(dbo, 'fundraisers', filter)
 
     res.json({ fundraisers })
   } catch (err) {
