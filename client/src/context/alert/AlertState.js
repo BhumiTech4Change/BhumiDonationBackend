@@ -1,30 +1,34 @@
 import { useContext, useReducer } from 'react'
-import authReducer from '../auth/authReducer'
 import alertContext from './alertContext'
 import AlertContext from './alertContext'
 import alertReducer from './alertReducer'
-import {SET_ALERT,REMOVE_ALERT} from '../types'
-import {nanoid} from nanoid
+import { SET_ALERT, REMOVE_ALERT } from '../types'
+import { nanoid } from 'nanoid'
 
 export const useAlert = () => {
   const { state, dispatch } = useContext(alertContext)
   return [state, dispatch]
 }
 
-export const setAlert = (msg, type, timeout = 5000) => {
-    const id = nanoid()
-    dispatch({
-        type:SET_ALERT,
-        payload:{
-            msg,type,id
-        }
-    })
+export const setAlert = (dispatch, msg, type, timeout = 5000) => {
+  const id = nanoid()
+  dispatch({
+    type: SET_ALERT,
+    payload: {
+      msg,
+      type,
+      id,
+    },
+  })
 
-    setTimeout(() => dispatch({
-        type:REMOVE_ALERT,
-        payload:id
-    }),timeout)
-    
+  setTimeout(
+    () =>
+      dispatch({
+        type: REMOVE_ALERT,
+        payload: id,
+      }),
+    timeout
+  )
 }
 
 const AlertState = (props) => {

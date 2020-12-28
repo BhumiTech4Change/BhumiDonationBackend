@@ -10,6 +10,7 @@ import {
   USER_LOADED,
   AUTH_ERROR,
   CLEAR_ERRORS,
+  ACCESS_ERROR,
 } from '../types'
 
 export const useAuth = () => {
@@ -32,7 +33,7 @@ export const loadUser = async (dispatch) => {
       payload: res.data.user,
     })
   } catch (err) {
-    dispatch({ type: AUTH_ERROR })
+    dispatch({ type: AUTH_ERROR, payload: err.response.data.msg })
   }
 }
 
@@ -40,12 +41,16 @@ export const login = async (dispatch, formData) => {
   try {
     const res = await axios.post('/api/auth', formData, config)
 
-    dispatch({
-      type: LOGIN_SUCCESS,
-      payload: res.data.token,
-    })
-
-    loadUser(dispatch)
+    if (res.status === 201) {
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data.token,
+      })
+    } else
+      dispatch({
+        type: ACCESS_ERROR,
+        payload: `You do not have admin priviliges`,
+      })
   } catch (err) {
     dispatch({
       type: LOGIN_FAIL,

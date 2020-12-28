@@ -32,7 +32,7 @@ router.post('/', loginValidation, async (req, res) => {
   if (!errors.isEmpty())
     return res
       .status(400)
-      .json({ msg: 'validation error', errors: errors.array() })
+      .json({ msg: 'Validation error', errors: errors.array() })
 
   let { dbo } = req.app.locals
   let { email, password } = req.body

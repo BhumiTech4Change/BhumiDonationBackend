@@ -5,6 +5,7 @@ import {
   USER_LOADED,
   AUTH_ERROR,
   CLEAR_ERRORS,
+  ACCESS_ERROR,
 } from '../types'
 
 const authReducer = (state, action) => {
@@ -22,7 +23,9 @@ const authReducer = (state, action) => {
         token: action.payload,
         loading: false,
         isAuthenticated: true,
+        error: null,
       }
+    case ACCESS_ERROR:
     case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT:
