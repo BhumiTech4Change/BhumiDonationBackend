@@ -1,6 +1,7 @@
 import './App.css'
 import Fundraiser from './components/fundraiser/Fundraiser'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import PrivateRoute from './components/auth/PrivateRoute'
 import PaymentState from './context/payment/PaymentState'
 import AuthState from './context/auth/AuthState'
 import AlertState from './context/alert/AlertState'
@@ -27,7 +28,7 @@ const App = () => {
                   component={Fundraiser}
                 />
                 <Route exact path='/admin/login' component={Login} />
-                <Route exact path='/admin' component={Dashboard} />
+                <PrivateRoute exact path='/admin' component={Dashboard} />
                 <Route component={NotFound} />
               </Switch>
             </Container>
