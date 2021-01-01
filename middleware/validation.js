@@ -71,8 +71,27 @@ const fundraiserValidation = [
     .bail(),
 ]
 
+const changePasswordValidation = [
+  body('currentPwd')
+    .exists()
+    .withMessage('Please enter current password')
+    .bail(),
+  body('newPwd')
+    .exists()
+    .withMessage('Please enter new password')
+    .bail()
+    .custom((value, { req }) => value !== req.body.currentPwd)
+    .withMessage('New password cannot be the same as old password')
+    .bail()
+    .matches(
+      /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/
+    )
+    .withMessage('Invalid new password'),
+]
+
 module.exports = {
   loginValidation,
   registerValidation,
   fundraiserValidation,
+  changePasswordValidation,
 }

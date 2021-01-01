@@ -2,9 +2,13 @@ const router = require('express').Router()
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { ObjectID } = require('mongodb')
 
-const { loginValidation } = require('../middleware/validation')
-const { findOneById, findOne } = require('../handler/mongoHandler')
+const {
+  loginValidation,
+  changePasswordValidation,
+} = require('../middleware/validation')
+const { findOneById, findOne, updateOne } = require('../handler/mongoHandler')
 const auth = require('../middleware/auth')
 
 // !private
@@ -19,7 +23,7 @@ router.get('/', auth, async (req, res) => {
     if (!user) return res.status(404).json({ msg: 'no user found' })
     res.json({ user })
   } catch (err) {
-    console.err(err.message)
+    console.error(err.message)
     res.status(500).json({ msg: 'Server Error' })
   }
 })
@@ -65,5 +69,47 @@ router.post('/', loginValidation, async (req, res) => {
     res.status(500).json({ msg: 'Server Error' })
   }
 })
+
+// !private
+// POST /api/auth/changepassword
+// change password of logged in user
+router.post(
+  '/changepassword',
+  auth,
+  changePasswordValidation,
+  async (req, res) => {
+    let errors = validationResult(req)
+    if (!errors.isEmpty())
+      return res
+        .status(400)
+        .json({ msg: 'Validation error', errors: errors.array() })
+
+    let { dbo } = req.app.locals
+
+    let { currentPwd, newPwd } = req.body
+
+    try {
+      let user = await findOne(dbo, 'users', { _id: new ObjectID(req.user.id) })
+
+      if (!user) return res.status(404).json({ msg: 'No user found' })
+
+      let isMatch = await bcrypt.compare(currentPwd, user.password)
+      if (!isMatch)
+        return res.status(401).json({ msg: 'Incorrect current password' })
+
+      let hash = await bcrypt.hash(newPwd, 10)
+      await updateOne(
+        dbo,
+        'users',
+        { _id: new ObjectID(req.user.id) },
+        { $set: { password: hash } }
+      )
+      res.json({ msg: 'Password updated' })
+    } catch (err) {
+      console.error(err.message)
+      res.status(500).json({ msg: 'Server Error' })
+    }
+  }
+)
 
 module.exports = router
