@@ -5,51 +5,43 @@ import Button from '@material-ui/core/Button'
 import axios from 'axios'
 import Alert from '@material-ui/lab/Alert'
 
-const ChangePassword = () => {
+const AddNgo = () => {
   const [, alertDispatch] = useAlert()
   const [error, setError] = useState('')
-  const [details, setDetails] = useState({
-    currentPwd: '',
-    newPwd: '',
+  const [ngo, setNgo] = useState({
+    name: '',
+    description: '',
+    url: '',
   })
   useEffect(() => {
     if (error) setAlert(alertDispatch, error, 'error')
   }, [error, alertDispatch])
 
-  const { currentPwd, newPwd } = details
+  const { name, description, url } = ngo
 
-  const onChange = (e) =>
-    setDetails({ ...details, [e.target.name]: e.target.value })
+  const onChange = (e) => setNgo({ ...ngo, [e.target.name]: e.target.value })
 
   const onSubmit = async (e) => {
     e.preventDefault()
 
-    if (currentPwd === '') setError('Please enter current password')
-    else if (newPwd === '') setError('Please enter new password')
-    else if (currentPwd === newPwd)
-      setError('New password cannot be the same as old password')
-    else if (
-      !newPwd.match(
-        // eslint-disable-next-line
-        /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/
-      )
-    )
-      setError('New password does not fulfill all conditions')
+    if (name === '' || description === '' || url === '')
+      setError('Please fill all fields')
     else {
       try {
         await axios.post(
-          '/api/auth/changepassword',
-          { currentPwd, newPwd },
+          '/api/admin/ngos',
+          { name, description, url },
           {
             headers: {
               'Content-Type': 'application/json',
             },
           }
         )
-        setAlert(alertDispatch, 'Password changed', 'success')
-        setDetails({
-          currentPwd: '',
-          newPwd: '',
+        setAlert(alertDispatch, 'NGO added successfully', 'success')
+        setNgo({
+          name: '',
+          description: '',
+          url: '',
         })
       } catch (err) {
         setError(err.response.data.msg)
@@ -59,32 +51,42 @@ const ChangePassword = () => {
 
   return (
     <div style={formDivStyles}>
-      <h1>Change Password</h1>
+      <h1>Add NGO</h1>
       <form onSubmit={onSubmit} style={formStyles}>
         <TextField
-          label='Current Password'
-          name='currentPwd'
-          type='password'
+          label='Name'
+          name='name'
+          size='small'
           variant='outlined'
-          value={currentPwd}
+          value={name}
           onChange={onChange}
           fullWidth
         />
         <TextField
-          label='New Password'
-          name='newPwd'
-          type='password'
+          label='Description'
+          name='description'
+          multiline
+          rows={2}
           variant='outlined'
-          value={newPwd}
+          value={description}
+          onChange={onChange}
+          fullWidth
+        />
+        <TextField
+          label='URL'
+          size='small'
+          name='url'
+          type='url'
+          variant='outlined'
+          value={url}
           onChange={onChange}
           fullWidth
         />
         <Alert severity='info'>
-          Your password should be atleast 8 characters long and contain atleast
-          1 uppercase, 1 lowercase, 1 special character and 1 number.
+          Please enter full url starting with http(s)://
         </Alert>
         <Button variant='contained' color='primary' type='submit'>
-          Update
+          Add NGO
         </Button>
       </form>
     </div>
@@ -100,7 +102,7 @@ const formDivStyles = {
 
 const formStyles = {
   width: '50%',
-  height: '50%',
+  height: '60%',
   margin: 'auto',
   paddingTop: '1%',
   display: 'flex',
@@ -108,4 +110,4 @@ const formStyles = {
   justifyContent: 'space-around',
 }
 
-export default ChangePassword
+export default AddNgo

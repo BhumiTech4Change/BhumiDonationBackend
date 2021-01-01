@@ -12,6 +12,22 @@ const auth = require('../middleware/auth')
 const adminCheck = require('../middleware/adminCheck')
 
 // !private
+// GET /api/admin/fundraisers
+// get all fundraisers for a ngo
+router.get('/fundraisers', auth, adminCheck, async (req, res) => {
+  const { dbo } = req.app.locals
+
+  try {
+    let fundraisers = await findAll(dbo, 'fundraisers')
+
+    res.json({ fundraisers })
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).json({ msg: 'Server errror' })
+  }
+})
+
+// !private
 // GET /api/admin/fundraisers/:ngoId
 // get all fundraisers for a ngo
 router.get('/fundraisers/:ngoId', auth, adminCheck, async (req, res) => {

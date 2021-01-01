@@ -12,6 +12,10 @@ import Dashboard from './components/admin/Dashboard'
 import Container from '@material-ui/core/Container'
 import Alerts from './components/layout/Alerts'
 import ChangePassword from './components/auth/ChangePassword'
+import Fundraisers from './components/admin/Fundraisers'
+import AdminFundraiser from './components/admin/Fundraiser'
+import Ngos from './components/admin/Ngos'
+import AddNgo from './components/admin/AddNgo'
 
 const App = () => {
   return (
@@ -35,6 +39,18 @@ const App = () => {
                   path='/admin/changepassword'
                   component={ChangePassword}
                 />
+                <PrivateRoute
+                  exact
+                  path='/admin/fundraisers'
+                  component={Fundraisers}
+                />
+                <PrivateRoute
+                  exact
+                  path='/admin/fundraisers/:shortUrl'
+                  component={AdminFundraiser}
+                />
+                <PrivateRoute exact path='/admin/ngos' component={Ngos} />
+                <PrivateRoute exact path='/admin/ngos/add' component={AddNgo} />
                 <Route component={NotFound} />
               </Switch>
             </Container>
