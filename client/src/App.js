@@ -11,6 +11,7 @@ import Login from './components/auth/Login'
 import Dashboard from './components/admin/Dashboard'
 import Container from '@material-ui/core/Container'
 import Alerts from './components/layout/Alerts'
+import ChangePassword from './components/auth/ChangePassword'
 
 const App = () => {
   return (
@@ -29,6 +30,11 @@ const App = () => {
                 />
                 <Route exact path='/admin/login' component={Login} />
                 <PrivateRoute exact path='/admin' component={Dashboard} />
+                <PrivateRoute
+                  exact
+                  path='/admin/changepassword'
+                  component={ChangePassword}
+                />
                 <Route component={NotFound} />
               </Switch>
             </Container>
