@@ -24,7 +24,7 @@ router.get('/', auth, async (req, res) => {
 router.get('/:ngoid', auth, async (req, res) => {
   let { dbo } = req.app.locals
   try {
-    let ngos = await findOne(dbo, 'ngos', {
+    let ngo = await findOne(dbo, 'ngos', {
       _id: new ObjectID(req.params.ngoid),
     })
     res.json({ ngo })

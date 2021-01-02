@@ -28,12 +28,12 @@ const Ngos = () => {
   }))
   const columns = [
     { field: 'name', headerName: 'Name', width: 150 },
-    { field: 'description', headerName: 'Description', width: 200 },
+    { field: 'description', headerName: 'Description', width: 270 },
     {
       field: 'subCategories',
       headerName: 'Sub-Categories',
       width: 160,
-      valueFormatter: (params) => params.value.length,
+      valueFormatter: (params) => params.value.length.toString(),
     },
     {
       field: 'url',

@@ -44,7 +44,7 @@ const AddNgo = () => {
       formData.append('description', description)
       formData.append('url', url)
       try {
-        let res = await axios.post('/api/admin/ngos', formData, {
+        await axios.post('/api/admin/ngos', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
