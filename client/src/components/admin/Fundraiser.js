@@ -23,7 +23,7 @@ const Fundraiser = ({
       }
     }
     fetchData()
-  }, [])
+  }, [shortUrl])
 
   let rows
   if (fundraiser) {

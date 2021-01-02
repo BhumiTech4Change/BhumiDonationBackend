@@ -1,6 +1,17 @@
 const router = require('express').Router()
 const { ObjectID } = require('mongodb')
-
+const multer = require('multer')
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, './uploads'),
+  filename: (req, file, cb) =>
+    cb(
+      null,
+      Date.now() +
+        '.' +
+        file.mimetype.substring(file.mimetype.lastIndexOf('/') + 1)
+    ),
+})
+const upload = multer({ storage })
 const {
   findAll,
   insertOne,
@@ -47,25 +58,31 @@ router.get('/fundraisers/:ngoId', auth, adminCheck, async (req, res) => {
 // !private
 // POST /api/admin/ngos
 // add new ngo
-router.post('/ngos', auth, adminCheck, async (req, res) => {
-  const { dbo } = req.app.locals
-  const { name, description, url } = req.body
-
-  try {
-    let data = {
-      name,
-      description,
-      url,
-      subCategories: [],
-      createdAt: new Date().toString().substring(4, 24),
+router.post(
+  '/ngos',
+  auth,
+  adminCheck,
+  upload.single('file'),
+  async (req, res) => {
+    const { dbo } = req.app.locals
+    const { name, description, url } = req.body
+    try {
+      let data = {
+        name,
+        description,
+        url,
+        subCategories: [],
+        logo: req.file.filename,
+        createdAt: new Date().toString().substring(4, 24),
+      }
+      await insertOne(dbo, 'ngos', data)
+      res.json({ msg: 'NGO added' })
+    } catch (err) {
+      console.error(err.message)
+      res.status(500).json({ msg: 'Server errror' })
     }
-    await insertOne(dbo, 'ngos', data)
-    res.json({ msg: 'NGO added' })
-  } catch (err) {
-    console.error(err.message)
-    res.status(500).json({ msg: 'Server errror' })
   }
-})
+)
 
 // !private
 // DELETE /api/admin/ngos/:id
