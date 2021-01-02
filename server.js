@@ -10,7 +10,7 @@ require('dotenv').config()
 //To parse req.body
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-app.use(express.static(__dirname + '/uploads'))
+app.use('/uploads', express.static(__dirname + '/uploads'))
 //To enable cors
 app.use(cors())
 

@@ -4,6 +4,8 @@ import Spinner from '../layout/Spinner'
 import { DataGrid } from '@material-ui/data-grid'
 import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
+import Grid from '@material-ui/core/Grid'
+import Avatar from '@material-ui/core/Avatar'
 
 const Ngo = ({
   match: {
@@ -56,17 +58,27 @@ const Ngo = ({
     <Spinner />
   ) : (
     <>
-      <Typography variant='h5' gutterBottom>
-        {ngo.name}
-        {'       '}
-        <Link href={ngo.url} variant='caption'>
-          Website
-        </Link>
-      </Typography>
-      <Typography variant='subtitle1'>{ngo.description}</Typography>
-      <Typography variant='h6' style={{ paddingTop: '2%' }}>
-        Subcategories:
-      </Typography>
+      <Grid container style={{ padding: 8 }}>
+        <Grid item xs={2}>
+          <Avatar
+            src={`/uploads/${ngo.logo}`}
+            alt='Logo'
+            style={{ width: 200, height: 200 }}
+          />
+        </Grid>
+        <Grid item xs={10} align='center'>
+          <Typography variant='h4' gutterBottom>
+            {ngo.name}
+            {'       '}
+            <Link href={ngo.url} variant='caption'>
+              Website
+            </Link>
+          </Typography>
+          <Typography variant='subtitle1'>{ngo.description}</Typography>
+        </Grid>
+      </Grid>
+
+      <Typography variant='h6'>Subcategories:</Typography>
 
       <div style={{ height: '500px', width: '100%' }}>
         <DataGrid

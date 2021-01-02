@@ -5,10 +5,13 @@ import { DataGrid } from '@material-ui/data-grid'
 import { Link as RouterLink } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
+import IconButton from '@material-ui/core/IconButton'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const Ngos = () => {
   const [ngos, setNgos] = useState([])
   const [loading, setLoading] = useState(true)
+  const [stateRows, setStateRows] = useState([])
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -19,10 +22,18 @@ const Ngos = () => {
         setLoading(false)
       }
     }
+    const makeRows = () =>
+      setStateRows(
+        ngos.map((ngo) => ({
+          ...ngo,
+          id: ngo._id,
+        }))
+      )
     fetchData()
-  }, [])
+    makeRows()
+  }, [ngos])
 
-  const rows = ngos.map((ngo) => ({
+  let rows = ngos.map((ngo) => ({
     ...ngo,
     id: ngo._id,
   }))
@@ -50,17 +61,36 @@ const Ngos = () => {
     { field: 'createdAt', headerName: 'Date and Time', width: 200 },
     {
       field: '_id',
-      headerName: 'Details',
-      width: 150,
+      headerName: 'Actions',
+      width: 170,
       renderCell: (params) => (
-        <Typography>
-          <RouterLink to={`/admin/ngos/${params.value}`}>View More</RouterLink>
-        </Typography>
+        <>
+          <Typography>
+            <RouterLink to={`/admin/ngos/${params.value}`}>
+              View More
+            </RouterLink>
+          </Typography>
+          <IconButton
+            color='secondary'
+            style={{ marginLeft: 12 }}
+            onClick={onDelete}
+            data-id={params.value}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
       ),
       sortable: false,
       filterable: false,
     },
   ]
+
+  const onDelete = async (e) => {
+    let { id } = e.target.closest('button').dataset
+
+    await axios.delete(`/api/admin/ngos/${id}`)
+    setStateRows(rows.filter((row) => row.id !== id))
+  }
 
   return loading ? (
     <Spinner />
@@ -80,7 +110,7 @@ const Ngos = () => {
       </div>
       <div style={{ height: '500px', width: '100%' }}>
         <DataGrid
-          rows={rows}
+          rows={stateRows}
           columns={columns}
           showToolbar
           showCellRightBorder
