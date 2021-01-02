@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Spinner from '../layout/Spinner'
-import { DataGrid } from '@material-ui/data-grid'
+import { DataGrid, setRowCountStateUpdate } from '@material-ui/data-grid'
 import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
 import Grid from '@material-ui/core/Grid'
 import Avatar from '@material-ui/core/Avatar'
+import { Link as RouterLink } from 'react-router-dom'
+import IconButton from '@material-ui/core/IconButton'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const Ngo = ({
   match: {
@@ -14,12 +17,14 @@ const Ngo = ({
 }) => {
   const [ngo, setNgo] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [rows, setRows] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(`/api/ngos/${ngoid}`)
         setNgo(res.data.ngo)
+        setRows(res.data.ngo.subCategories)
         setLoading(false)
       } catch (error) {
         setLoading(false)
@@ -28,21 +33,13 @@ const Ngo = ({
     fetchData()
   }, [ngoid])
 
-  let rows
-  if (ngo) {
-    rows = ngo.subCategories.map((sub) => ({
-      ...sub,
-      id: sub.name,
-    }))
-  }
-
   const columns = [
     { field: 'name', headerName: 'Name', width: 200 },
     { field: 'description', headerName: 'Description', width: 350 },
     {
       field: 'url',
       headerName: 'Website',
-      width: 320,
+      width: 300,
       renderCell: (params) => (
         <Typography>
           <Link href={params.value}>{params.value}</Link>
@@ -52,7 +49,25 @@ const Ngo = ({
       filterable: false,
     },
     { field: 'createdAt', headerName: 'Date and Time', width: 200 },
+    {
+      field: 'id',
+      headerName: 'Actions',
+      width: 120,
+      renderCell: (params) => (
+        <IconButton color='secondary' onClick={onDelete} data-id={params.value}>
+          <DeleteIcon />
+        </IconButton>
+      ),
+      sortable: false,
+      filterable: false,
+    },
   ]
+
+  const onDelete = async (e) => {
+    const { id } = e.target.closest('button').dataset
+    await axios.delete(`/api/admin/ngos/${ngoid}/categories/${id}`)
+    setRows(rows.filter((row) => row.id !== id))
+  }
 
   return loading ? (
     <Spinner />
@@ -78,7 +93,20 @@ const Ngo = ({
         </Grid>
       </Grid>
 
-      <Typography variant='h6'>Subcategories:</Typography>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          paddingTop: 25,
+        }}
+      >
+        <Typography variant='h6'>Sub-Categories:</Typography>
+        <Typography variant='button'>
+          <RouterLink to={`/admin/ngos/${ngoid}/addcategory`}>
+            Add Sub-Category
+          </RouterLink>
+        </Typography>
+      </div>
 
       <div style={{ height: '500px', width: '100%' }}>
         <DataGrid

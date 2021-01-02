@@ -21,6 +21,7 @@ const {
 } = require('../handler/mongoHandler')
 const auth = require('../middleware/auth')
 const adminCheck = require('../middleware/adminCheck')
+const { nanoid } = require('nanoid')
 
 // !private
 // GET /api/admin/fundraisers
@@ -110,6 +111,7 @@ router.post('/ngos/:ngoId/categories', auth, adminCheck, async (req, res) => {
 
   try {
     let data = {
+      id: nanoid(),
       name,
       description,
       url,
@@ -127,19 +129,19 @@ router.post('/ngos/:ngoId/categories', auth, adminCheck, async (req, res) => {
 })
 
 // !private
-// DELETE /api/admin/ngos/:ngoId/categories/
-// add new category
+// DELETE /api/admin/ngos/:ngoId/categories/:id
+// delete a category
 router.delete(
-  '/ngos/:ngoId/categories/',
+  '/ngos/:ngoId/categories/:id',
   auth,
   adminCheck,
   async (req, res) => {
     const { dbo } = req.app.locals
-    const { name } = req.body
+    const { id } = req.params
 
     try {
       let filter = { _id: new ObjectID(req.params.ngoId) }
-      let operation = { $pull: { subCategories: { name } } }
+      let operation = { $pull: { subCategories: { id } } }
 
       await updateOne(dbo, 'ngos', filter, operation)
       res.json({ msg: 'Category removed' })

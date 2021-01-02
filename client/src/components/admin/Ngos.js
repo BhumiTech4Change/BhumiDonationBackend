@@ -11,32 +11,26 @@ import DeleteIcon from '@material-ui/icons/Delete'
 const Ngos = () => {
   const [ngos, setNgos] = useState([])
   const [loading, setLoading] = useState(true)
-  const [stateRows, setStateRows] = useState([])
+  const [rows, setRows] = useState([])
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get('/api/ngos')
+        setRows(
+          res.data.ngos.map((ngo) => ({
+            ...ngo,
+            id: ngo._id,
+          }))
+        )
         setLoading(false)
         setNgos(res.data.ngos)
       } catch (error) {
         setLoading(false)
       }
     }
-    const makeRows = () =>
-      setStateRows(
-        ngos.map((ngo) => ({
-          ...ngo,
-          id: ngo._id,
-        }))
-      )
     fetchData()
-    makeRows()
   }, [ngos])
 
-  let rows = ngos.map((ngo) => ({
-    ...ngo,
-    id: ngo._id,
-  }))
   const columns = [
     { field: 'name', headerName: 'Name', width: 150 },
     { field: 'description', headerName: 'Description', width: 270 },
@@ -89,7 +83,7 @@ const Ngos = () => {
     let { id } = e.target.closest('button').dataset
 
     await axios.delete(`/api/admin/ngos/${id}`)
-    setStateRows(rows.filter((row) => row.id !== id))
+    setRows(rows.filter((row) => row.id !== id))
   }
 
   return loading ? (
@@ -100,7 +94,7 @@ const Ngos = () => {
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          paddingTop: '2%',
+          paddingTop: 25,
         }}
       >
         <Typography variant='h6'>NGOs:</Typography>
@@ -110,7 +104,7 @@ const Ngos = () => {
       </div>
       <div style={{ height: '500px', width: '100%' }}>
         <DataGrid
-          rows={stateRows}
+          rows={rows}
           columns={columns}
           showToolbar
           showCellRightBorder

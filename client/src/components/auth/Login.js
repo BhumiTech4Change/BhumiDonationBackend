@@ -3,6 +3,7 @@ import { useAlert, setAlert } from '../../context/alert/AlertState'
 import { clearErrors, login, useAuth } from '../../context/auth/AuthState'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 
 const Login = (props) => {
   const [, alertDispatch] = useAlert()
@@ -49,7 +50,7 @@ const Login = (props) => {
 
   return (
     <div style={formDivStyles}>
-      <h1>Admin Login</h1>
+      <Typography variant='h4'>Admin Login</Typography>
       <form onSubmit={onSubmit} style={formStyles}>
         <TextField
           label='Email'

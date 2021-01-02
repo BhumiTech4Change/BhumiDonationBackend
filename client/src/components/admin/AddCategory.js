@@ -6,57 +6,48 @@ import axios from 'axios'
 import Alert from '@material-ui/lab/Alert'
 import Typography from '@material-ui/core/Typography'
 
-const AddNgo = () => {
+const AddCategory = ({
+  match: {
+    params: { ngoid },
+  },
+}) => {
   const [, alertDispatch] = useAlert()
   const [error, setError] = useState('')
-  const [ngo, setNgo] = useState({
+  const [sub, setSub] = useState({
     name: '',
     description: '',
     url: '',
   })
-  const [file, setFile] = useState('')
-  const [filename, setFilename] = useState('Choose file')
   useEffect(() => {
     if (error) setAlert(alertDispatch, error, 'error')
   }, [error, alertDispatch])
 
-  const { name, description, url } = ngo
+  const { name, description, url } = sub
 
-  const onFileChange = (e) => {
-    if (e.target.files.length > 0) {
-      setFile(e.target.files[0])
-      setFilename(e.target.files[0].name)
-    }
-  }
-
-  const onChange = (e) => setNgo({ ...ngo, [e.target.name]: e.target.value })
+  const onChange = (e) => setSub({ ...sub, [e.target.name]: e.target.value })
 
   const onSubmit = async (e) => {
     e.preventDefault()
 
     if (name === '' || description === '' || url === '')
       setError('Please fill all fields')
-    else if (file === '') setError('Please upload a logo')
     else {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('name', name)
-      formData.append('description', description)
-      formData.append('url', url)
       try {
-        await axios.post('/api/admin/ngos', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-        setAlert(alertDispatch, 'NGO added successfully', 'success')
-        setNgo({
+        await axios.post(
+          `/api/admin/ngos/${ngoid}/categories`,
+          { name, description, url },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        setAlert(alertDispatch, 'Category added successfully', 'success')
+        setSub({
           name: '',
           description: '',
           url: '',
         })
-        setFile('')
-        setFilename('Choose file')
       } catch (err) {
         setError(err.response.data.msg)
       }
@@ -65,7 +56,7 @@ const AddNgo = () => {
 
   return (
     <div style={formDivStyles}>
-      <Typography variant='h4'>Add NGO</Typography>
+      <Typography variant='h4'>Add Sub-Category</Typography>
       <form onSubmit={onSubmit} style={formStyles}>
         <TextField
           label='Name'
@@ -96,27 +87,12 @@ const AddNgo = () => {
           onChange={onChange}
           fullWidth
         />
-        <Alert severity='info'>
+        <Alert severity='info' align='left'>
           Please enter full url starting with http(s)://
         </Alert>
-        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-          <input
-            accept='image/*'
-            style={{ display: 'none' }}
-            id='contained-button-file'
-            multiple
-            type='file'
-            onChange={onFileChange}
-          />
-          <label htmlFor='contained-button-file'>
-            <Button variant='contained' color='secondary' component='span'>
-              Upload NGO Logo
-            </Button>
-          </label>
-          <Typography>{filename}</Typography>
-        </div>
+
         <Button variant='contained' color='primary' type='submit'>
-          Add NGO
+          Add
         </Button>
       </form>
     </div>
@@ -132,7 +108,7 @@ const formDivStyles = {
 
 const formStyles = {
   width: '50%',
-  height: '70%',
+  height: '60%',
   margin: 'auto',
   paddingTop: '1%',
   display: 'flex',
@@ -140,4 +116,4 @@ const formStyles = {
   justifyContent: 'space-around',
 }
 
-export default AddNgo
+export default AddCategory

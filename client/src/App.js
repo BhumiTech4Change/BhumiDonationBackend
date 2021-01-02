@@ -17,6 +17,7 @@ import AdminFundraiser from './components/admin/Fundraiser'
 import Ngos from './components/admin/Ngos'
 import AddNgo from './components/admin/AddNgo'
 import Ngo from './components/admin/Ngo'
+import AddCategory from './components/admin/AddCategory'
 
 const App = () => {
   return (
@@ -53,6 +54,11 @@ const App = () => {
                 <PrivateRoute exact path='/admin/ngos' component={Ngos} />
                 <PrivateRoute exact path='/admin/ngos/add' component={AddNgo} />
                 <PrivateRoute exact path='/admin/ngos/:ngoid' component={Ngo} />
+                <PrivateRoute
+                  exact
+                  path='/admin/ngos/:ngoid/addcategory'
+                  component={AddCategory}
+                />
                 <Route component={NotFound} />
               </Switch>
             </Container>
