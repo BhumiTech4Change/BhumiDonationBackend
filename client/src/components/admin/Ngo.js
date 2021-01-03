@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Spinner from '../layout/Spinner'
-import { DataGrid, setRowCountStateUpdate } from '@material-ui/data-grid'
+import { DataGrid } from '@material-ui/data-grid'
 import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
 import Grid from '@material-ui/core/Grid'
