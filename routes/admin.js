@@ -66,13 +66,14 @@ router.post(
   upload.single('file'),
   async (req, res) => {
     const { dbo } = req.app.locals
-    const { name, description, url, location } = req.body
+    const { name, description, url, location, cause } = req.body
     try {
       let data = {
         name,
         description,
         url,
         location,
+        cause,
         subCategories: [],
         logo: req.file.filename,
         createdAt: new Date().toString().substring(4, 24)

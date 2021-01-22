@@ -13,6 +13,7 @@ const AddNgo = () => {
     name: '',
     description: '',
     location: '',
+    cause: '',
     url: ''
   })
   const [file, setFile] = useState('')
@@ -21,7 +22,7 @@ const AddNgo = () => {
     if (error) setAlert(alertDispatch, error, 'error')
   }, [error, alertDispatch])
 
-  const { name, description, location, url } = ngo
+  const { name, description, location, url, cause } = ngo
 
   const onFileChange = (e) => {
     if (e.target.files.length > 0) {
@@ -35,7 +36,13 @@ const AddNgo = () => {
   const onSubmit = async (e) => {
     e.preventDefault()
 
-    if (name === '' || description === '' || url === '' || location === '')
+    if (
+      name === '' ||
+      description === '' ||
+      url === '' ||
+      location === '' ||
+      cause === ''
+    )
       setError('Please fill all fields')
     else if (file === '') setError('Please upload a logo')
     else {
@@ -44,6 +51,7 @@ const AddNgo = () => {
       formData.append('name', name)
       formData.append('description', description)
       formData.append('location', location)
+      formData.append('cause', cause)
       formData.append('url', url)
       try {
         await axios.post('/api/admin/ngos', formData, {
@@ -56,6 +64,7 @@ const AddNgo = () => {
           name: '',
           description: '',
           location: '',
+          cause: '',
           url: ''
         })
         setFile('')
@@ -90,11 +99,20 @@ const AddNgo = () => {
           fullWidth
         />
         <TextField
-          label='Location'
+          label='Location (Multiple values can be separated with commas)'
           name='location'
           size='small'
           variant='outlined'
           value={location}
+          onChange={onChange}
+          fullWidth
+        />
+        <TextField
+          label='Cause (Multiple values can be separated with commas)'
+          name='cause'
+          size='small'
+          variant='outlined'
+          value={cause}
           onChange={onChange}
           fullWidth
         />
