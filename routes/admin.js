@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
       Date.now() +
         '.' +
         file.mimetype.substring(file.mimetype.lastIndexOf('/') + 1)
-    ),
+    )
 })
 const upload = multer({ storage })
 const {
@@ -17,7 +17,7 @@ const {
   insertOne,
   updateOne,
   deleteOne,
-  findMany,
+  findMany
 } = require('../handler/mongoHandler')
 const auth = require('../middleware/auth')
 const adminCheck = require('../middleware/adminCheck')
@@ -66,15 +66,16 @@ router.post(
   upload.single('file'),
   async (req, res) => {
     const { dbo } = req.app.locals
-    const { name, description, url } = req.body
+    const { name, description, url, location } = req.body
     try {
       let data = {
         name,
         description,
         url,
+        location,
         subCategories: [],
         logo: req.file.filename,
-        createdAt: new Date().toString().substring(4, 24),
+        createdAt: new Date().toString().substring(4, 24)
       }
       await insertOne(dbo, 'ngos', data)
       res.json({ msg: 'NGO added' })
@@ -115,7 +116,7 @@ router.post('/ngos/:ngoId/categories', auth, adminCheck, async (req, res) => {
       name,
       description,
       url,
-      createdAt: new Date().toString().substring(4, 24),
+      createdAt: new Date().toString().substring(4, 24)
     }
     let filter = { _id: new ObjectID(req.params.ngoId) }
     let operation = { $push: { subCategories: data } }

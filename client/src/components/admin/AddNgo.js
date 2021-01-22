@@ -12,7 +12,8 @@ const AddNgo = () => {
   const [ngo, setNgo] = useState({
     name: '',
     description: '',
-    url: '',
+    location: '',
+    url: ''
   })
   const [file, setFile] = useState('')
   const [filename, setFilename] = useState('Choose file')
@@ -20,7 +21,7 @@ const AddNgo = () => {
     if (error) setAlert(alertDispatch, error, 'error')
   }, [error, alertDispatch])
 
-  const { name, description, url } = ngo
+  const { name, description, location, url } = ngo
 
   const onFileChange = (e) => {
     if (e.target.files.length > 0) {
@@ -34,7 +35,7 @@ const AddNgo = () => {
   const onSubmit = async (e) => {
     e.preventDefault()
 
-    if (name === '' || description === '' || url === '')
+    if (name === '' || description === '' || url === '' || location === '')
       setError('Please fill all fields')
     else if (file === '') setError('Please upload a logo')
     else {
@@ -42,18 +43,20 @@ const AddNgo = () => {
       formData.append('file', file)
       formData.append('name', name)
       formData.append('description', description)
+      formData.append('location', location)
       formData.append('url', url)
       try {
         await axios.post('/api/admin/ngos', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+            'Content-Type': 'multipart/form-data'
+          }
         })
         setAlert(alertDispatch, 'NGO added successfully', 'success')
         setNgo({
           name: '',
           description: '',
-          url: '',
+          location: '',
+          url: ''
         })
         setFile('')
         setFilename('Choose file')
@@ -83,6 +86,15 @@ const AddNgo = () => {
           rows={2}
           variant='outlined'
           value={description}
+          onChange={onChange}
+          fullWidth
+        />
+        <TextField
+          label='Location'
+          name='location'
+          size='small'
+          variant='outlined'
+          value={location}
           onChange={onChange}
           fullWidth
         />
@@ -127,7 +139,7 @@ const formDivStyles = {
   width: '100%',
   height: '100vh',
   textAlign: 'center',
-  padding: '3%',
+  padding: '3%'
 }
 
 const formStyles = {
@@ -137,7 +149,7 @@ const formStyles = {
   paddingTop: '1%',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'space-around',
+  justifyContent: 'space-around'
 }
 
 export default AddNgo
