@@ -47,7 +47,8 @@ router.post('/', registerValidation, async (req, res) => {
     })
 
     let devLink = `${req.protocol}://${req.hostname}:5000/verify/${result.insertedId}`
-    let prodLink = `${req.protocol}://${req.hostname}/verify/${result.insertedId}`
+    // let prodLink = `${req.protocol}://${req.hostname}:5000/verify/${result.insertedId}`
+    let prodLink = `https://platforms.bhumi.ngo/verify/${result.insertedId}`
     let link = prod ? prodLink : devLink
     const mailResult = await sendVerificationMail(
       transporter,
