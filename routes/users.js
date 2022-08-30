@@ -52,6 +52,7 @@ router.post('/', registerValidation, async (req, res) => {
     let link = prod ? prodLink : devLink
     const mailResult = await sendVerificationMail(
       transporter,
+      name,
       process.env.EMAIL,
       email,
       link
