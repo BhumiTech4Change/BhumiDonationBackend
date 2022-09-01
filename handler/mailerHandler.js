@@ -3,7 +3,7 @@ const sendVerificationMail = (transporter, name, fromEmail, toEmail, link) =>
     from: fromEmail,
     to: toEmail,
     subject: 'Bhumi Fundraiser App Verification Email',
-    html: `Hello ${name}, <br/><br/> This email is being sent to you as part of the signup process at Bhumi Fundraiser App and was initiated by you. Your registration is incomplete until you have verified your email address. <br/><br/> Please click <a href='${link}'>here</a> to verify your email and start your journey as Fundraiser.`,
+    html: `Hi ${name}<br/><br/>Thank you for signing up on the Bhumi Fundraiser App! Please take just a moment to verify your email address, in order to complete your registration. As a verified user, we will enjoy a greater level of trust in our interactions. <br/><br/> Just click the link below, and you're all set to start your journey as a Fundraiser: <br/> <a href="${link}">${link}</a> <br/><br/> Thank you! <br/> Team Bhumi`,
   })
 
 module.exports = {
