@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Spinner from '../layout/Spinner'
-import { DataGrid } from '@material-ui/data-grid'
+import { DataGrid, GridToolbar } from '@material-ui/data-grid'
 import { Link } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography'
 
@@ -24,7 +24,7 @@ const Fundraisers = () => {
   const rows = fundraisers.map((fundraiser) => ({
     ...fundraiser,
     id: fundraiser._id,
-    amountRaised: `₹${fundraiser.amountRaised}`,
+    amountRaised: fundraiser.amountRaised,
     createdAt: fundraiser.createdAt.substring(0, 11),
     subCategory: fundraiser.subCategory ? fundraiser.subCategory : '-nil-',
   }))
@@ -59,6 +59,9 @@ const Fundraisers = () => {
         <DataGrid
           rows={rows}
           columns={columns}
+          components={{
+            Toolbar: GridToolbar,
+          }}
           showToolbar
           showCellRightBorder
         />
