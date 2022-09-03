@@ -1,5 +1,6 @@
 const { findOneById, verifyUser } = require('../handler/mongoHandler')
 const path = require('path')
+const { sendVerificationConfirmationMail } = require("../handler/mailerHandler");
 const router = require('express').Router()
 
 // *public
@@ -14,6 +15,16 @@ router.get('/:userid', async (req, res) => {
     if (!user) return res.sendFile(path.resolve(__dirname, '../views/404.html'))
 
     await verifyUser(dbo, userid)
+
+    let { transporter } = req.app.locals
+    const mailResult = await sendVerificationConfirmationMail(
+        transporter,
+        user.name,
+        process.env.EMAIL,
+        user.email
+    )
+    console.log(mailResult.envelope)
+
     res.sendFile(path.resolve(__dirname, '../views/verificationPage.html'))
   } catch (err) {
     console.error(err.message)
