@@ -10,8 +10,8 @@ const sendVerificationConfirmationMail = (transporter, name, fromEmail, toEmail)
     transporter.sendMail({
         from: fromEmail,
         to: toEmail,
-        subject: 'Bhumi Fundraiser email verification complete',
-        html: `Hi ${name}<br/><br/>Your email has been confirmed, you can log in to the app. <br/><br/>Thank you! <br/> Team Bhumi`,
+        subject: 'Account verified',
+        html: `Hi ${name}<br/><br/>Your account has been verified by email. Please go back to app and login with your credentials.<br/><br/>Thank you! <br/> Team Bhumi`,
     })
 
 
