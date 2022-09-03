@@ -17,4 +17,5 @@ const sendVerificationConfirmationMail = (transporter, name, fromEmail, toEmail)
 
 module.exports = {
   sendVerificationMail,
+  sendVerificationConfirmationMail
 }
