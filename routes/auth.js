@@ -60,7 +60,7 @@ router.post('/', loginValidation, async (req, res) => {
       },
     }
 
-    let token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 })
+    let token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d' })
 
     if (user.role === 'admin') return res.status(201).json({ token })
     res.json({ token })
