@@ -14,8 +14,16 @@ const sendVerificationConfirmationMail = (transporter, name, fromEmail, toEmail)
         html: `Hi ${name}<br/><br/>Your account has been verified by email. Please go back to app and login with your credentials.<br/><br/>Thank you! <br/> Team Bhumi`,
     })
 
+const sendPasswordResetMail = (transporter, name, fromEmail, toEmail, resetUrl) =>
+    transporter.sendMail({
+        from: fromEmail,
+        to: toEmail,
+        subject: 'Bhumi Donation App Password Reset',
+        html: `Hello ${name}<br/><br/>You are receiving this email because you (or someone else) have requested the reset of the password for your account. <br/><br/> Please click on the following link, or paste this into your browser to complete the process: <br/><br/> <a href="${resetUrl}">${resetUrl}</a> <br/><br/> If you did not request this, please ignore this email and your password will remain unchanged <br/><br/> Thank You`
+    })
 
 module.exports = {
   sendVerificationMail,
-  sendVerificationConfirmationMail
+  sendVerificationConfirmationMail,
+  sendPasswordResetMail
 }

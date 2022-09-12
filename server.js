@@ -7,6 +7,11 @@ const path = require('path')
 const aws = require('aws-sdk')
 require('dotenv').config()
 
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
+app.use(express.static(path.join(__dirname, 'public')));
+
 //To parse req.body
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -22,6 +27,7 @@ app.use('/api/auth', require('./routes/auth'))
 app.use('/api/razorpay', require('./routes/razorpay'))
 app.use('/api/admin', require('./routes/admin'))
 app.use('/verify', require('./routes/verify'))
+app.use('/reset', require('./routes/resetPassword'))
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'))
