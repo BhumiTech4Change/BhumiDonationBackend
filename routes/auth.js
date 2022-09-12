@@ -137,7 +137,7 @@ router.post('/forgotPassword', resetPasswordRequestValidation, async function (r
 
     if (!user) {
       return res
-          .status(401)
+          .status(400)
           .json({msg: 'This email is not registered'})
     }
 
