@@ -18,6 +18,16 @@ const loginValidation = [
     .withMessage('Invalid password'),
 ]
 
+const resetPasswordRequestValidation = [
+  body('email')
+      .exists({ checkFalsy: true, checkNull: true })
+      .withMessage('Please enter an email')
+      .bail()
+      .isEmail()
+      .withMessage('enter valid email')
+      .bail()
+]
+
 const registerValidation = [
   body('name')
     .exists({ checkFalsy: true, checkNull: true })
@@ -94,4 +104,5 @@ module.exports = {
   registerValidation,
   fundraiserValidation,
   changePasswordValidation,
+  resetPasswordRequestValidation
 }
