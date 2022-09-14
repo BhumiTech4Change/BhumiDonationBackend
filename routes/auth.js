@@ -176,4 +176,4 @@ router.post('/forgotPassword', resetPasswordRequestValidation, async function (r
   }
 })
 
-export default router
+export { router as authRoute }

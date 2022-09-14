@@ -1,24 +1,22 @@
 import express from 'express'
-import MongoClient from 'mongodb'
+import {MongoClient} from 'mongodb'
 import nodemailer from 'nodemailer'
 import cors from 'cors'
-import path from 'path'
+import path, {dirname} from 'path'
 import aws from 'aws-sdk'
 import './middleware/config.js'
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import {fileURLToPath} from 'url';
+// import routes
+import {verifyRoute} from './routes/verify.js';
+import {resetPasswordRoute} from './routes/resetPassword.js';
+import {usersRoute} from './routes/users.js';
+import {fundraisersRoute} from './routes/fundraisers.js';
+import {ngosRoute} from './routes/ngos.js';
+import {authRoute} from './routes/auth.js';
+import {razorPayRoute} from './routes/razorpay.js';
+import {adminRoute} from './routes/admin.js';
 
 const app = express()
-
-// import routes
-import * as users from './routes/users.js'
-import * as fundraisers from './routes/fundraisers.js'
-import * as ngos from './routes/ngos.js'
-import * as auth from './routes/auth.js'
-import * as razorpay from './routes/razorpay.js'
-import * as admin from './routes/admin.js'
-import { verifyRoute } from './routes/verify.js';
-import * as resetPassword from './routes/resetPassword.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -36,14 +34,14 @@ app.use('/uploads', express.static(__dirname + '/uploads'))
 app.use(cors())
 
 //routers
-app.use('/api/users', users)
-app.use('/api/fundraisers', fundraisers)
-app.use('/api/ngos', ngos)
-app.use('/api/auth', auth)
-app.use('/api/razorpay', razorpay)
-app.use('/api/admin', admin)
+app.use('/api/users', usersRoute)
+app.use('/api/fundraisers', fundraisersRoute)
+app.use('/api/ngos', ngosRoute)
+app.use('/api/auth', authRoute)
+app.use('/api/razorpay', razorPayRoute)
+app.use('/api/admin', adminRoute)
 app.use('/verify', verifyRoute)
-app.use('/reset', resetPassword)
+app.use('/reset', resetPasswordRoute)
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'))
@@ -65,11 +63,9 @@ app.listen(PORT, () => {
     region: 'us-east-1',
     maxRetries: 1,
   })
-  let transporter = nodemailer.createTransport({
+  app.locals.transporter = nodemailer.createTransport({
     SES: new aws.SES(),
   })
-
-  app.locals.transporter = transporter
 
   MongoClient.connect(
     process.env.DB_URL,

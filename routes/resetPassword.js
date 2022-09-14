@@ -72,4 +72,4 @@ router.post('/', async function (req, res) {
     }
 });
 
-export default router
+export { router as resetPasswordRoute }

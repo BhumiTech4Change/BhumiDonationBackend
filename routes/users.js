@@ -85,4 +85,4 @@ router.get('/verify/:userid', async (req, res) => {
   }
 })
 
-export default router
+export { router as usersRoute }
