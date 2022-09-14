@@ -1,6 +1,7 @@
-const router = require('express').Router()
-const { ObjectID } = require('mongodb')
-const multer = require('multer')
+import express from 'express';
+import { ObjectID } from 'mongodb'
+import multer from 'multer'
+import { nanoid } from 'nanoid'
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, './uploads'),
   filename: (req, file, cb) =>
@@ -12,16 +13,17 @@ const storage = multer.diskStorage({
     )
 })
 const upload = multer({ storage })
-const {
+import {
   findAll,
   insertOne,
   updateOne,
   deleteOne,
   findMany
-} = require('../handler/mongoHandler')
-const auth = require('../middleware/auth')
-const adminCheck = require('../middleware/adminCheck')
-const { nanoid } = require('nanoid')
+} from '../handler/mongoHandler.js'
+import auth from '../middleware/auth.js'
+import adminCheck from '../middleware/adminCheck.js'
+
+const router = express.Router()
 
 // !private
 // GET /api/admin/fundraisers
@@ -154,4 +156,4 @@ router.delete(
   }
 )
 
-module.exports = router
+export { router as adminRoute }

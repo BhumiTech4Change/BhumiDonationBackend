@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb')
+import { ObjectID } from 'mongodb'
 
 const findAll = (dbo, coll) => dbo.collection(coll).find({}).toArray()
 
@@ -24,7 +24,7 @@ const updateOne = (dbo, coll, filter, operation) =>
 
 const deleteOne = (dbo, coll, filter) => dbo.collection(coll).deleteOne(filter)
 
-module.exports = {
+export {
   findOneById,
   findOne,
   insertOne,

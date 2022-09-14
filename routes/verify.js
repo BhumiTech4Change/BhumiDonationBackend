@@ -1,7 +1,11 @@
-const { findOneById, verifyUser } = require('../handler/mongoHandler')
-const path = require('path')
-const { sendVerificationConfirmationMail } = require("../handler/mailerHandler");
-const router = require('express').Router()
+import express from 'express'
+import path from 'path'
+
+
+import { findOneById, verifyUser } from '../handler/mongoHandler.js'
+import { sendVerificationConfirmationMail } from '../handler/mailerHandler.js'
+
+const router = express.Router()
 
 // *public
 // GET /verify/:userid
@@ -32,4 +36,4 @@ router.get('/:userid', async (req, res) => {
   }
 })
 
-module.exports = router
+export { router as verifyRoute }

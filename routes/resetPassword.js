@@ -1,6 +1,9 @@
-const router = require('express').Router()
-const { findOne, updateOne } = require("../handler/mongoHandler");
-const bcrypt = require("bcryptjs");
+import express from 'express'
+import bcrypt from 'bcryptjs'
+
+import { findOne, updateOne } from '../handler/mongoHandler.js'
+
+const router = express.Router()
 
 router.get('/:token', async function (req, res) {
     let { dbo } = req.app.locals
@@ -69,4 +72,4 @@ router.post('/', async function (req, res) {
     }
 });
 
-module.exports = router
+export { router as resetPasswordRoute }

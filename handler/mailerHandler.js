@@ -22,7 +22,7 @@ const sendPasswordResetMail = (transporter, name, fromEmail, toEmail, resetUrl) 
         html: `Hello ${name}<br/><br/>You are receiving this email because you (or someone else) have requested the reset of the password for your account. <br/><br/> Please click on the following link, or paste this into your browser to complete the process: <br/><br/> <a href="${resetUrl}">${resetUrl}</a> <br/><br/> If you did not request this, please ignore this email and your password will remain unchanged <br/><br/> Thank You`
     })
 
-module.exports = {
+export {
   sendVerificationMail,
   sendVerificationConfirmationMail,
   sendPasswordResetMail

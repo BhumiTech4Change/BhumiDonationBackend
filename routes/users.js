@@ -1,16 +1,18 @@
-const router = require('express').Router()
-const { validationResult } = require('express-validator')
-const bcrypt = require('bcryptjs')
-const path = require('path')
+import express from 'express';
+import { validationResult } from 'express-validator'
+import bcrypt from 'bcryptjs'
+import path from 'path'
 
-const { registerValidation } = require('../middleware/validation')
-const {
+import { registerValidation } from '../middleware/validation.js'
+import {
   findOne,
   insertOne,
   findOneById,
   verifyUser,
-} = require('../handler/mongoHandler')
-const { sendVerificationMail } = require('../handler/mailerHandler')
+} from '../handler/mongoHandler.js'
+import { sendVerificationMail } from '../handler/mailerHandler.js'
+
+const router = express.Router()
 const prod = process.env.NODE_ENV === 'production'
 
 // *public
@@ -83,4 +85,4 @@ router.get('/verify/:userid', async (req, res) => {
   }
 })
 
-module.exports = router
+export { router as usersRoute }
