@@ -1,11 +1,16 @@
-const router = require('express').Router()
-const Razorpay = require('razorpay')
-const { nanoid } = require('nanoid')
-const crypto = require('crypto')
-const { updateOne } = require('../handler/mongoHandler')
-const prod = process.env.NODE_ENV === 'production'
 
-var razorpay = new Razorpay({
+import express from 'express'
+import Razorpay from 'razorpay'
+import { nanoid } from 'nanoid'
+import crypto from 'crypto'
+
+import { updateOne } from '../handler/mongoHandler.js'
+
+const prod = process.env.NODE_ENV === 'production'
+console.log(process.env.NODE_ENV)
+const router = express.Router();
+
+const razorpay = new Razorpay({
   key_id: prod ? process.env.RAZORPAY_ID : process.env.RAZORPAY_TEST_ID,
   key_secret: prod
     ? process.env.RAZORPAY_SECRET
@@ -76,4 +81,4 @@ router.post('/verify', async (req, res) => {
   }
 })
 
-module.exports = router
+export default router

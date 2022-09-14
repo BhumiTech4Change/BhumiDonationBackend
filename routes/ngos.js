@@ -1,8 +1,9 @@
-const { ObjectID } = require('mongodb')
-const { findAll, findOne } = require('../handler/mongoHandler')
-const auth = require('../middleware/auth')
+import { ObjectID } from 'mongodb'
+import { findAll, findOne } from '../handler/mongoHandler.js'
+import auth from '../middleware/auth.js'
+import express from 'express'
 
-const router = require('express').Router()
+const router = express.Router()
 
 // !private
 // GET /api/ngos
@@ -34,4 +35,4 @@ router.get('/:ngoid', auth, async (req, res) => {
   }
 })
 
-module.exports = router
+export default router

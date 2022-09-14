@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 
-module.exports = function (req, res, next) {
+export default function auth(req, res, next) {
   const tokenHeader = req.header('Authorization')
 
   if (!tokenHeader)

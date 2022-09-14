@@ -1,20 +1,22 @@
-const router = require('express').Router()
-const { validationResult } = require('express-validator')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const { ObjectID } = require('mongodb')
-const { sendPasswordResetMail } = require("../handler/mailerHandler");
-const prod = process.env.NODE_ENV === 'production'
+import express from 'express'
+import { validationResult } from 'express-validator'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { ObjectID } from 'mongodb'
+import { nanoid } from 'nanoid'
 
-const {
+import { sendPasswordResetMail } from '../handler/mailerHandler.js';
+import {
   loginValidation,
   changePasswordValidation,
   resetPasswordRequestValidation,
-} = require('../middleware/validation')
+} from '../middleware/validation.js'
 
-const { findOneById, findOne, updateOne } = require('../handler/mongoHandler')
-const auth = require('../middleware/auth')
-const { nanoid } = require("nanoid");
+import { findOneById, findOne, updateOne } from '../handler/mongoHandler.js'
+import auth from '../middleware/auth.js'
+
+const router = express.Router()
+const prod = process.env.NODE_ENV === 'production'
 
 // !private
 // GET /api/auth
@@ -174,4 +176,4 @@ router.post('/forgotPassword', resetPasswordRequestValidation, async function (r
   }
 })
 
-module.exports = router
+export default router

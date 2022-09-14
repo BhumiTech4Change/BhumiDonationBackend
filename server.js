@@ -1,11 +1,27 @@
-const express = require('express')
+import express from 'express'
+import MongoClient from 'mongodb'
+import nodemailer from 'nodemailer'
+import cors from 'cors'
+import path from 'path'
+import aws from 'aws-sdk'
+import './middleware/config.js'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
 const app = express()
-const { MongoClient } = require('mongodb')
-const nodemailer = require('nodemailer')
-const cors = require('cors')
-const path = require('path')
-const aws = require('aws-sdk')
-require('dotenv').config()
+
+// import routes
+import * as users from './routes/users.js'
+import * as fundraisers from './routes/fundraisers.js'
+import * as ngos from './routes/ngos.js'
+import * as auth from './routes/auth.js'
+import * as razorpay from './routes/razorpay.js'
+import * as admin from './routes/admin.js'
+import { verifyRoute } from './routes/verify.js';
+import * as resetPassword from './routes/resetPassword.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,14 +36,14 @@ app.use('/uploads', express.static(__dirname + '/uploads'))
 app.use(cors())
 
 //routers
-app.use('/api/users', require('./routes/users'))
-app.use('/api/fundraisers', require('./routes/fundraisers'))
-app.use('/api/ngos', require('./routes/ngos'))
-app.use('/api/auth', require('./routes/auth'))
-app.use('/api/razorpay', require('./routes/razorpay'))
-app.use('/api/admin', require('./routes/admin'))
-app.use('/verify', require('./routes/verify'))
-app.use('/reset', require('./routes/resetPassword'))
+app.use('/api/users', users)
+app.use('/api/fundraisers', fundraisers)
+app.use('/api/ngos', ngos)
+app.use('/api/auth', auth)
+app.use('/api/razorpay', razorpay)
+app.use('/api/admin', admin)
+app.use('/verify', verifyRoute)
+app.use('/reset', resetPassword)
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'))

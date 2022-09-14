@@ -1,16 +1,16 @@
-const router = require('express').Router()
-const { validationResult, body } = require('express-validator')
-const { nanoid } = require('nanoid')
+import express from 'express';
+import { validationResult } from 'express-validator'
+import { nanoid } from 'nanoid'
 
-const auth = require('../middleware/auth')
-const {
-  findAll,
+import auth from '../middleware/auth.js'
+import {
   findMany,
   insertOne,
-  findOneById,
   findOne,
-} = require('../handler/mongoHandler')
-const { fundraiserValidation } = require('../middleware/validation')
+} from '../handler/mongoHandler.js'
+import { fundraiserValidation } from '../middleware/validation.js'
+
+const router = express.Router()
 
 // !private
 // GET /api/fundraisers/
@@ -83,4 +83,4 @@ router.get('/:shortUrl', async (req, res) => {
   }
 })
 
-module.exports = router
+export { router as fundraisersRoute }
