@@ -1,6 +1,8 @@
 import React from 'react'
+import { Button } from '@mui/material';
+
 import { usePayments, verifyPayment } from '../../context/payment/PaymentState'
-import Button from '@material-ui/core/Button'
+
 
 const loadScript = (src) =>
   new Promise((resolve) => {

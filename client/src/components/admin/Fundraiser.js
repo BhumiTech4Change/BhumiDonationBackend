@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom';
+import { DataGrid } from "@mui/x-data-grid";
+import { Typography } from "@mui/material";
 import axios from 'axios'
-import Spinner from '../layout/Spinner'
-import { DataGrid } from '@material-ui/data-grid'
-import Typography from '@material-ui/core/Typography'
 
-const Fundraiser = ({
-  match: {
-    params: { shortUrl },
-  },
-}) => {
+import Spinner from '../layout/Spinner'
+
+const Fundraiser = () => {
   const [fundraiser, setFundraiser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const { shortUrl } = useParams();
+
 
   useEffect(() => {
     const fetchData = async () => {

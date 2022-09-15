@@ -1,8 +1,7 @@
-import Alert from '@material-ui/lab/Alert'
-import AlertTitle from '@material-ui/lab/AlertTitle'
+import { Alert, AlertTitle } from '@mui/material';
 import React from 'react'
 
-const Thankyou = () => {
+const ThankYou = () => {
   return (
     <Alert severity='success' align='left'>
       <AlertTitle>Payment Successful</AlertTitle>
@@ -11,4 +10,4 @@ const Thankyou = () => {
   )
 }
 
-export default Thankyou
+export default ThankYou
