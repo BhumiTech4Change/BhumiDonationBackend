@@ -1,5 +1,4 @@
-import Alert from '@material-ui/lab/Alert'
-import AlertTitle from '@material-ui/lab/AlertTitle'
+import { Alert, AlertTitle } from '@mui/material';
 import React from 'react'
 
 const PaymentError = () => {
